@@ -1,24 +1,44 @@
-import logo from './logo.svg';
+import React, { useState, useContext, createContext } from 'react';
 import './App.css';
 
-function App() {
+const Unico = createContext({
+  usuario: ``,
+  setUsuario: () => {},
+});
+
+function VerUsuario() {
+  const { usuario } = useContext(Unico);
+
+  return <input type="text" value={usuario} readOnly />
+}
+
+function ModificaUsuario() {
+  const { setUsuario } = useContext(Unico);
+
+  const handleClick = () => {
+    const novoUsuario = prompt('Digite o nome do novo usuário', Math.random().toString(36).slice(-5));
+    setUsuario(novoUsuario);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <button onClick={handleClick}>Modificar usuario</button>
+    </>
+  )
+}
+
+function App() {
+  const [usuario, setUsuario] = useState(`Anonimo`);
+
+  return (
+    <>
+      <Unico.Provider value={{ usuario, setUsuario }}>
+        Usuario: <VerUsuario /><ModificaUsuario />
+        <br />
+        <hr />
+        {usuario}
+      </Unico.Provider>
+    </>
   );
 }
 
